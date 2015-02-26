@@ -48,31 +48,75 @@
             ey = evt.pageY,
             sx = data.elements.sx,
             sy = data.elements.sy;
-
-            //console.log("X " + x + sx + " Y " + y + sy);
-            if (sx>ex)
+            
+            if (sx>ex && sy>ey)
             {
                 data.elements = {
-                    width: sx + ex,
-                    height: sy + ey,                    
-                    deg: (sx + ex)/(sy + ey)*10
+                    width: sx - ex,
+                    height: sy - ey,
+                    sx: ex,
+                    sy: ey,
+                    ex: ex,
+                    ey: ey                    
+                    //deg: (sx + ex)/(sy + ey)*10
                 };
-                console.log('greather');
+                
+                setTimeout(function()
+                {
+                    createObj.call(this);
+                },200); 
             }
-            else
+            else if(sy>ey && sx<ex)
+            {
+                data.elements = {
+                    width: (ex-sx),
+                    height: (sy-ey),
+                    sx: sx,
+                    sy: sy,
+                    ex: ex,
+                    ey: ey
+                    //deg: (Math.sqrt((Math.pow((ex-sx),2))+(Math.pow(5,2))))
+                };
+                
+                console.log('lower');
+                setTimeout(function()
+                {
+                    createObj.call(this);
+                },200);                
+            }
+            else if(ex>sx && ey>sy)
             {
                 data.elements = {
                     width: (ex-sx),
                     height: (ey - sy),
                     sx: sx,
                     sy: sy,
-                    deg: (Math.sqrt((Math.pow((ex-sx),2))+(Math.pow(5,2))))
+                    ex: ex,
+                    ey: ey
+                    //deg: (Math.sqrt((Math.pow((ex-sx),2))+(Math.pow(5,2))))
                 };
                 
                 setTimeout(function()
                 {
                     createObj.call(this);
                 },200);                
+            }
+            else
+            {
+                data.elements = {
+                        width: (sx-ex),
+                        height: (ey - sy),
+                        sx: ex,
+                        sy: sy,
+                        ex: ex,
+                        ey: ey
+                        //deg: (Math.sqrt((Math.pow((ex-sx),2))+(Math.pow(5,2))))
+                    };
+
+                    setTimeout(function()
+                    {
+                        createObj.call(this);
+                    },200);     
             }
             console.log("2. sx "+sx +" sy "+sy);
         });
@@ -82,7 +126,7 @@
      */
     var randColor = function ()
     {
-        return '#' + Math.random().toString(16).slice(2, 8);
+        return 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
     };
     /**
      * create div element, obj
@@ -91,15 +135,18 @@
     {
         var data = getCords.call(document),
         c = randColor.call(this),
-        w = data.elements.width,
+        w = data.elements.width*2,
         sx = data.elements.sx,
-        syeredeti = data.elements.sy, 
+        ey = data.elements.ey,
         sy = data.elements.sy,//(data.elements.height)/2+ +(syeredeti),
         h = data.elements.height,
-        top = h/2,
-        deg = data.elements.deg;
-        
-        $('body').append('<div style="background:' + c + '; width:'+w+';height:'+h+';position:absolute; left:'+sx+';top:'+top+';transform: rotate('+deg+'deg)"></div>');
+        ex = data.elements.ex,
+        deg = 45;//data.elements.deg;
+        //x1="'+sx+'" y1="'+sy+'"
+        $('body').append('<svg height="'+h+'" width="'+w+'" style="position: absolute; top:'+sy+'">'+
+                          '<line x1="'+0+'" y1="'+0+'" x2="'+ex+'" y2="'+ey+'" style="stroke:'+c+';stroke-width:4" />'+
+                          '</svg>');
+        //$('body').append('<div style="background:' + c + '; width:'+w+';height:'+h+';position:absolute; left:'+sx+';top:'+sy+';transform: rotate('+deg+'deg)"></div>');
         
         console.log('3. w->'+w+'h-> '+h+' deg-> '+deg +" sx "+sx+" sy "+sy);
         
